@@ -4,19 +4,29 @@ import Person from "./components/Person";
 import Filter from "./components/Filter";
 import service from "./utils";
 
-const checkKeyValue = (first, second) => {
-    const firstKeyList = Object.getOwnPropertyNames(first);
-    for (const key of firstKeyList) {
-        if (first[key] === second[key]) {
-            return true;
+// const checkKeyValue = (first, second) => {
+//     const firstKeyList = Object.getOwnPropertyNames(first);
+//     for (const key of firstKeyList) {
+//         if (first[key] === second[key]) {
+//             return true;
+//         }
+//     }
+//     return false;
+// };
+
+const checkNameEqual = (persons, newPerson) => {
+    for (let i = 0; i < persons.length; i++) {
+        if (persons[i].name === newPerson.name) {
+            return i;
         }
     }
-    return false;
+    return -1;
 };
 
-const checkPersonEqual = (persons, newPerson) => {
+
+const checkNumberEqual = (persons, newPerson) => {
     for (let i = 0; i < persons.length; i++) {
-        if (checkKeyValue(persons[i], newPerson)) {
+        if (persons[i].number === newPerson.number) {
             return true;
         }
     }
@@ -72,10 +82,19 @@ const App = () => {
         const newPerson = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1
         };
-        if (checkPersonEqual(persons, newPerson)) {
-            alert(`${newNumber} or ${newName} is already added to phonebook`);
+        const idx = checkNameEqual(persons, newPerson);
+
+        if (checkNumberEqual(persons, newPerson)) {
+            alert(`${newNumber} is already added to phonebook`);
+        } else if (idx !== -1) {
+            const id = persons[idx].id;
+            if (window.confirm(`${persons[idx].name} is already added to phonebook, replace the old number with a new one?`)) {
+                service.update(id, newPerson)
+                    .then(returnedPerson => setPersons(
+                        persons.map(person => person.id !== id ? person : returnedPerson)
+                    ));
+            }
         } else {
             service.create(newPerson)
                 .then(returnedPerson => setPersons(persons.concat(returnedPerson)));
