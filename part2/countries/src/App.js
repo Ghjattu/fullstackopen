@@ -15,13 +15,16 @@ const filter = (countries, searchName) => {
     return results;
 };
 
-const showData = (countries, searchName) => {
-    const results = filter(countries, searchName);
-
+const SearchResults = ({results, onClick}) => {
     if (results.length > 10) {
         return <p>Too many matches, specify another filter</p>
     } else if (results.length > 1) {
-        return results.map(res => <p key={res.name.official}>{res.name.common}</p>);
+        return results.map((res, i) =>
+            <p key={res.name.official}>
+                <span>{res.name.common}</span>
+                <button onClick={() => onClick(i)}>show</button>
+            </p>
+        );
     } else if (results.length === 1) {
         return (
             <div>
@@ -39,6 +42,7 @@ const showData = (countries, searchName) => {
 const App = () => {
     const [countries, setCountries] = useState([]);
     const [searchName, setSearchName] = useState('');
+    let results = filter(countries, searchName);
 
     useEffect(() => {
         axios.get('https://restcountries.com/v3.1/all')
@@ -49,6 +53,10 @@ const App = () => {
         setSearchName(e.target.value);
     };
 
+    const handleClick = (i) => {
+        setSearchName(results[i].name.common);
+    };
+
     return (
         <div>
             <div>
@@ -56,7 +64,7 @@ const App = () => {
                 <input type="text" value={searchName} onChange={handleChange}/>
             </div>
             <div>
-                {showData(countries, searchName)}
+                <SearchResults results={results} onClick={(i) => handleClick(i)}/>
             </div>
         </div>
     );
