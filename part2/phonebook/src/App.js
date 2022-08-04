@@ -1,12 +1,22 @@
 import {useEffect, useState} from 'react';
-import axios from "axios";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
 import Filter from "./components/Filter";
+import service from "./utils";
+
+const checkKeyValue = (first, second) => {
+    const firstKeyList = Object.getOwnPropertyNames(first);
+    for (const key of firstKeyList) {
+        if (first[key] === second[key]) {
+            return true;
+        }
+    }
+    return false;
+};
 
 const checkPersonEqual = (persons, newPerson) => {
     for (let i = 0; i < persons.length; i++) {
-        if (persons[i].number === newPerson.number) {
+        if (checkKeyValue(persons[i], newPerson)) {
             return true;
         }
     }
@@ -14,16 +24,16 @@ const checkPersonEqual = (persons, newPerson) => {
 };
 
 const filter = (persons, filterText) => {
-    const filterPerson = [];
+    const filterPersons = [];
     filterText = filterText.toLowerCase();
     for (let i = 0; i < persons.length; i++) {
         if (persons[i].name.toLowerCase().indexOf(filterText) !== -1 ||
             persons[i].number.toLowerCase().indexOf(filterText) !== -1) {
-            filterPerson.push(persons[i]);
+            filterPersons.push(persons[i]);
         }
     }
-    return filterPerson;
-}
+    return filterPersons;
+};
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -32,9 +42,9 @@ const App = () => {
     const [filterText, setFilterText] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:3001/persons')
-            .then(response => setPersons(response.data));
-    });
+        service.getAll()
+            .then(initialPersons => setPersons(initialPersons));
+    }, []);
 
     const handleNameChange = (e) => {
         setNewName(e.target.value);
@@ -48,6 +58,15 @@ const App = () => {
         setFilterText(e.target.value);
     };
 
+    const handleDeleteClick = (idx) => {
+        const filterPersons = filter(persons, filterText);
+        const deleteId = filterPersons[idx].id;
+        if (window.confirm(`Delete ${filterPersons[idx].name} ?`)) {
+            service.deleteById(deleteId)
+                .then(() => setPersons(persons.filter(person => person.id !== deleteId)));
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const newPerson = {
@@ -56,9 +75,10 @@ const App = () => {
             id: persons.length + 1
         };
         if (checkPersonEqual(persons, newPerson)) {
-            alert(`${newNumber} is already added to phonebook`);
+            alert(`${newNumber} or ${newName} is already added to phonebook`);
         } else {
-            setPersons(persons.concat(newPerson));
+            service.create(newPerson)
+                .then(returnedPerson => setPersons(persons.concat(returnedPerson)));
         }
         setNewName('');
         setNewNumber('');
@@ -75,7 +95,7 @@ const App = () => {
                         handleNumberChange={handleNumberChange}/>
 
             <h3>Numbers</h3>
-            <Person persons={filter(persons, filterText)}/>
+            <Person persons={filter(persons, filterText)} onClick={(idx) => handleDeleteClick(idx)}/>
         </div>
     );
 };
