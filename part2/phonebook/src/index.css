@@ -1,0 +1,11 @@
+.success {
+    line-height: 2;
+    color: green;
+    border: 1px solid green;
+}
+
+.error {
+    line-height: 2;
+    color: red;
+    border: 1px solid red;
+}

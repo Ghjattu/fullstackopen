@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 import service from "./utils";
 
 // const checkKeyValue = (first, second) => {
@@ -50,6 +51,8 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filterText, setFilterText] = useState('');
+    const [message, setMessage] = useState(null);
+    const [messageType, setMessageType] = useState('');
 
     useEffect(() => {
         service.getAll()
@@ -91,13 +94,27 @@ const App = () => {
             const id = persons[idx].id;
             if (window.confirm(`${persons[idx].name} is already added to phonebook, replace the old number with a new one?`)) {
                 service.update(id, newPerson)
-                    .then(returnedPerson => setPersons(
-                        persons.map(person => person.id !== id ? person : returnedPerson)
-                    ));
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.id !== id ? person : returnedPerson));
+                        setMessage(`Updated ${returnedPerson.name}'s phone number.`);
+                        setMessageType('success');
+                        setTimeout(() => setMessage(null), 3000);
+                    })
+                    .catch(() => {
+                        setPersons(persons.filter(person => person.id !== id));
+                        setMessage(`the ${newPerson.name} was already deleted from server.`);
+                        setMessageType('error');
+                        setTimeout(() => setMessage(null), 3000);
+                    });
             }
         } else {
             service.create(newPerson)
-                .then(returnedPerson => setPersons(persons.concat(returnedPerson)));
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson));
+                    setMessage(`Added ${returnedPerson.name}.`);
+                    setMessageType('success');
+                    setTimeout(() => setMessage(null), 3000);
+                });
         }
         setNewName('');
         setNewNumber('');
@@ -106,6 +123,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} className={messageType}/>
             <Filter filterText={filterText} handleFilterTextChange={handleFilterTextChange}/>
 
             <h3>Add a new</h3>
