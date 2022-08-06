@@ -5,16 +5,6 @@ import Filter from "./components/Filter";
 import Notification from "./components/Notification";
 import service from "./utils";
 
-// const checkKeyValue = (first, second) => {
-//     const firstKeyList = Object.getOwnPropertyNames(first);
-//     for (const key of firstKeyList) {
-//         if (first[key] === second[key]) {
-//             return true;
-//         }
-//     }
-//     return false;
-// };
-
 const checkNameEqual = (persons, newPerson) => {
     for (let i = 0; i < persons.length; i++) {
         if (persons[i].name === newPerson.name) {
