@@ -90,9 +90,8 @@ const App = () => {
                         setMessageType('success');
                         setTimeout(() => setMessage(null), 3000);
                     })
-                    .catch(() => {
-                        setPersons(persons.filter(person => person.id !== id));
-                        setMessage(`the ${newPerson.name} was already deleted from server.`);
+                    .catch((error) => {
+                        setMessage(error.response.data.error);
                         setMessageType('error');
                         setTimeout(() => setMessage(null), 3000);
                     });
@@ -103,6 +102,11 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                     setMessage(`Added ${returnedPerson.name}.`);
                     setMessageType('success');
+                    setTimeout(() => setMessage(null), 3000);
+                })
+                .catch(error => {
+                    setMessage(error.response.data.error);
+                    setMessageType('error');
                     setTimeout(() => setMessage(null), 3000);
                 });
         }
