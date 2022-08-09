@@ -5,16 +5,6 @@ import Filter from "./components/Filter";
 import Notification from "./components/Notification";
 import service from "./utils";
 
-// const checkKeyValue = (first, second) => {
-//     const firstKeyList = Object.getOwnPropertyNames(first);
-//     for (const key of firstKeyList) {
-//         if (first[key] === second[key]) {
-//             return true;
-//         }
-//     }
-//     return false;
-// };
-
 const checkNameEqual = (persons, newPerson) => {
     for (let i = 0; i < persons.length; i++) {
         if (persons[i].name === newPerson.name) {
@@ -100,9 +90,8 @@ const App = () => {
                         setMessageType('success');
                         setTimeout(() => setMessage(null), 3000);
                     })
-                    .catch(() => {
-                        setPersons(persons.filter(person => person.id !== id));
-                        setMessage(`the ${newPerson.name} was already deleted from server.`);
+                    .catch((error) => {
+                        setMessage(error.response.data.error);
                         setMessageType('error');
                         setTimeout(() => setMessage(null), 3000);
                     });
@@ -113,6 +102,11 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                     setMessage(`Added ${returnedPerson.name}.`);
                     setMessageType('success');
+                    setTimeout(() => setMessage(null), 3000);
+                })
+                .catch(error => {
+                    setMessage(error.response.data.error);
+                    setMessageType('error');
                     setTimeout(() => setMessage(null), 3000);
                 });
         }
