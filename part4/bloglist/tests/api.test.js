@@ -9,9 +9,7 @@ beforeEach(async () => {
     await Blog.deleteMany({});
     console.log('cleared');
 
-    const blogObjects = initialBlogs.map(blog => new Blog(blog));
-    const promiseArray = blogObjects.map(blog => blog.save());
-    await Promise.all(promiseArray);
+    await Blog.insertMany(initialBlogs);
     console.log('done');
 });
 
@@ -88,6 +86,49 @@ test('missing title or url', async () => {
         .post('/api/blogs')
         .send(newBlog)
         .expect(400);
+});
+
+describe('deletion of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+        let response = await api.get('/api/blogs');
+        const blogsAtStart = response.body;
+        const blogToDelete = blogsAtStart[0];
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204);
+
+        response = await api.get('/api/blogs');
+        const blogsAtEnd = response.body;
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1);
+
+        const titles = blogsAtEnd.map(blog => blog.title);
+        expect(titles).not.toContain(blogToDelete.title);
+    });
+});
+
+describe('update of a blog', () => {
+    test('succeeds with valid data', async () => {
+        let response = await api.get('/api/blogs');
+        const blogToUpdate = response.body[0];
+        const newBlog = {
+            title: 'React is simple',
+            author: 'Peter',
+            url: 'https://example.com',
+            likes: 0
+        };
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        response = await api.get('/api/blogs');
+        const titles = response.body.map(blog => blog.title);
+        expect(titles).toContain(newBlog.title);
+        expect(titles).not.toContain(blogToUpdate.title);
+    });
 });
 
 afterAll(() => {
