@@ -63,11 +63,12 @@ test('missing likes property default to 0', async () => {
         url: 'https://example.com'
     };
 
-    await api
+    const result = await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
+    expect(result.body.likes).toBe(0);
 
     const response = await api.get('/api/blogs');
     expect(response.body).toHaveLength(initialBlogs.length + 1);
