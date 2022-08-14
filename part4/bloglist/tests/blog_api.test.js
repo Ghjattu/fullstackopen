@@ -1,14 +1,23 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const initialBlogs = require('../utils/list_helper').blogs;
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const api = supertest(app);
 
 beforeEach(async () => {
+    await User.deleteMany({});
     await Blog.deleteMany({});
     console.log('cleared');
 
+    const passwordHash = await bcrypt.hash('root', 10);
+    const user = new User({
+        username: 'root',
+        passwordHash: passwordHash
+    });
+    await user.save();
     await Blog.insertMany(initialBlogs);
     console.log('done');
 });
@@ -36,6 +45,11 @@ test('there is a property named id', async () => {
 });
 
 test('a valid blog can be added', async () => {
+    const result = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'root' })
+        .expect(200);
+
     const newBlog = {
         title: 'React is simple',
         author: 'Peter',
@@ -46,10 +60,13 @@ test('a valid blog can be added', async () => {
     await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `bearer ${result.body.token}`)
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
+    const response = await api
+        .get('/api/blogs')
+        .set('Authorization', `bearer ${result.body.token}`);
     expect(response.body).toHaveLength(initialBlogs.length + 1);
 
     const titles = response.body.map(blog => blog.title);
