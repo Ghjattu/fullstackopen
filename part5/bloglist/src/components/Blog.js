@@ -30,14 +30,14 @@ const Blog = ({ blogs, updateBlog, deleteBlog }) => {
 	return (
 		<div>
 			{blogs.map((blog, index) =>
-				<div key={blog.id} style={style}>
+				<div key={blog.id} style={style} className="blog">
 					<p>
 						{blog.author}: {blog.title}
 						<button onClick={() => handleVisibleButtonClick(index)}>
 							{visible[index] ? 'hide' : 'view'}
 						</button>
 					</p>
-					{visible[index] && <div>
+					{visible[index] && <div className="toggleable-content">
 						<p>{blog.url}</p>
 						<p>likes {blog.likes} <button onClick={() => handleLikeButtonClick(blog.id, blog)}>like</button></p>
 						<button onClick={() => handleRemoveButtonClick(blog.id, blog.title, blog.author)}>remove</button>
