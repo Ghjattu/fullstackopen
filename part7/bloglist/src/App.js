@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
-import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import Toggleable from './components/Togglable';
 import BlogForm from './components/BlogForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPassword, setUsername } from './reducers/LoginFormReducer';
 import { setMessage } from './reducers/NotificationReducer';
-import { addBlog, initializeBlogs } from './reducers/BlogReducer';
+import { initializeBlogs } from './reducers/BlogReducer';
+import { login, logout, setUser } from './reducers/UserReducer';
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -16,39 +16,26 @@ const App = () => {
 	const blogs = useSelector(state => state.Blogs.blogs);
 	const username = useSelector(state => state.LoginForm.username);
 	const password = useSelector(state => state.LoginForm.password);
-	const [user, setUser] = useState(null);
+	const user = useSelector(state => state.User.user);
 	const message = useSelector(state => state.Notification.message);
-	// const blogFormRef = useRef();
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON);
-			setUser(user);
+			dispatch(setUser(user));
 			blogService.setToken(user.token);
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	dispatch(initializeBlogs());
-	// }, []);
-
-	const handleLoginSubmit = async (e) => {
+	const handleLoginSubmit = (e) => {
 		e.preventDefault();
 
 		try {
-			const user = await loginService.login({ username, password });
-
-			window.localStorage.setItem(
-				'loggedBlogAppUser', JSON.stringify(user)
-			);
-			blogService.setToken(user.token);
+			dispatch(login({ username, password }));
 			dispatch(initializeBlogs());
-
-			setUser(user);
 			dispatch(setUsername(''));
 			dispatch(setPassword(''));
-
 		} catch (error) {
 			dispatch(setMessage(error.response.data.error));
 			setTimeout(() => dispatch(setMessage(null)), 3000);
@@ -56,8 +43,7 @@ const App = () => {
 	};
 
 	const handleLogout = () => {
-		window.localStorage.removeItem('loggedBlogAppUser');
-		setUser(null);
+		dispatch(logout());
 	};
 
 	if (user === null) {
