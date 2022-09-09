@@ -2,6 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 
+/**
+ * @description Save the currently logged-in user.
+ * @type {Slice<{user: null}, {setUser(*, *): void}, string>}
+ */
 const userReducer = createSlice({
 	name: 'User',
 	initialState: {

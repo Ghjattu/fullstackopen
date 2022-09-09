@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBlogById, updateBlogLikes, updateVisible } from '../reducers/BlogReducer';
 
@@ -8,10 +7,11 @@ const style = {
 	margin: '10px 0'
 };
 
-const Blog = ({ blogs }) => {
+const Blog = () => {
 	const dispatch = useDispatch();
 
 	const visible = useSelector(state => state.Blogs.visible);
+	const blogs = useSelector(state => state.Blogs.blogs);
 
 	const handleVisibleButtonClick = (idx) => {
 		dispatch(updateVisible(idx));
@@ -35,10 +35,10 @@ const Blog = ({ blogs }) => {
 					<p>
 						{blog.author}: {blog.title}
 						<button onClick={() => handleVisibleButtonClick(index)}>
-							{visible[index] ? 'hide' : 'view'}
+							{visible[`${index}`] ? 'hide' : 'view'}
 						</button>
 					</p>
-					{visible[index] && <div className="toggleable-content">
+					{visible[`${index}`] && <div className="toggleable-content">
 						<p>{blog.url}</p>
 						<p>likes {blog.likes} <button onClick={() => handleLikeButtonClick(blog.id, blog)}>like</button></p>
 						<button onClick={() => handleRemoveButtonClick(blog.id, blog.title, blog.author)}>remove</button>
@@ -47,11 +47,6 @@ const Blog = ({ blogs }) => {
 			)}
 		</div>
 	);
-};
-
-Blog.propTypes = {
-	blogs: PropTypes.array,
-	deleteBlog: PropTypes.func
 };
 
 export default Blog;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
-import { setMessage } from './NotificationReducer';
+import { setNotification } from './NotificationReducer';
 
 const blogReducer = createSlice({
 	name: 'Blogs',
@@ -10,9 +10,8 @@ const blogReducer = createSlice({
 	},
 	reducers: {
 		setBlogs(state, action) {
-			state.blogs.push(...action.payload);
-			const temp = new Array(action.payload.length).fill(false);
-			state.visible.push(...temp);
+			state.blogs = action.payload;
+			state.visible = new Array(action.payload.length).fill(false);
 		},
 		addBlog(state, action) {
 			state.blogs.push(action.payload);
@@ -54,8 +53,7 @@ export const createBlog = (newBlog) => {
 	return async (dispatch) => {
 		const savedBlog = await blogService.create(newBlog);
 		dispatch(addBlog(savedBlog));
-		dispatch(setMessage(`a new blog ${savedBlog.title} by ${savedBlog.author} added`));
-		setTimeout(() => dispatch(setMessage(null)), 3000);
+		dispatch(setNotification(`a new blog ${savedBlog.title} by ${savedBlog.author} added`));
 	};
 };
 
@@ -63,8 +61,7 @@ export const updateBlogLikes = (id, newBlog) => {
 	return async (dispatch) => {
 		const updatedBlog = await blogService.update(id, newBlog);
 		dispatch(updateBlog(updatedBlog));
-		dispatch(setMessage(`the blog ${updatedBlog.title} by ${updatedBlog.author} updated`));
-		setTimeout(() => dispatch(setMessage(null)), 3000);
+		dispatch(setNotification(`the blog ${updatedBlog.title} by ${updatedBlog.author} updated`));
 	};
 };
 
@@ -72,8 +69,7 @@ export const deleteBlogById = (id) => {
 	return async (dispatch) => {
 		await blogService.deleteById(id);
 		dispatch(deleteBlog(id));
-		dispatch(setMessage('blog removed'));
-		setTimeout(() => dispatch(setMessage(null)), 3000);
+		dispatch(setNotification('blog removed'));
 	};
 };
 

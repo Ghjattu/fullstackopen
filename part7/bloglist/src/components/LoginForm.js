@@ -1,7 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { login } from '../reducers/UserReducer';
+import { initializeBlogs } from '../reducers/BlogReducer';
+import { setPassword, setUsername } from '../reducers/LoginFormReducer';
+import { setNotification } from '../reducers/NotificationReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
-const LoginForm = ({ handleSubmit, handleUsernameChange, handlePasswordChange, username, password }) => {
+const LoginForm = () => {
+	const dispatch = useDispatch();
+
+	const username = useSelector(state => state.LoginForm.username);
+	const password = useSelector(state => state.LoginForm.password);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		try {
+			dispatch(login({ username, password }));
+			dispatch(setUsername(''));
+			dispatch(setPassword(''));
+		} catch (error) {
+			dispatch(setNotification(error.response.data.error));
+		} finally {
+			dispatch(initializeBlogs());
+		}
+	};
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<div>
@@ -10,7 +33,7 @@ const LoginForm = ({ handleSubmit, handleUsernameChange, handlePasswordChange, u
 					type="text"
 					value={username}
 					name="Username"
-					onChange={handleUsernameChange}
+					onChange={({ target }) => dispatch(setUsername(target.value))}
 				/>
 			</div>
 			<div>
@@ -19,20 +42,12 @@ const LoginForm = ({ handleSubmit, handleUsernameChange, handlePasswordChange, u
 					type="password"
 					value={password}
 					name="Password"
-					onChange={handlePasswordChange}
+					onChange={({ target }) => dispatch(setPassword(target.value))}
 				/>
 			</div>
 			<button type="submit">login</button>
 		</form>
 	);
-};
-
-LoginForm.propTypes = {
-	handleSubmit: PropTypes.func,
-	handleUsernameChange: PropTypes.func,
-	handlePasswordChange: PropTypes.func,
-	username: PropTypes.string,
-	password: PropTypes.string
 };
 
 export default LoginForm;
