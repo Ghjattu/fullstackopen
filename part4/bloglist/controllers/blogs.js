@@ -24,14 +24,16 @@ blogsRouter.post('/', async (request, response) => {
         author: body.author,
         url: body.url,
         likes: body.likes === undefined ? 0 : body.likes,
-        user: user._id
+        user: user._id,
+        comments: []
     });
 
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
+    const returnedBlog = await Blog.findById(savedBlog._id).populate('user');
 
-    response.status(201).json(savedBlog);
+    response.status(201).json(returnedBlog);
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
@@ -53,10 +55,11 @@ blogsRouter.put('/:id', async (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes,
+        comments: body.comments
     };
 
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user');
     response.status(201).json(updatedBlog);
 });
 
