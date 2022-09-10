@@ -8,6 +8,7 @@ import RegisterForm from './components/RegisterForm';
 import { initializeUsers } from './reducers/UsersReducer';
 import { BrowserRouter } from 'react-router-dom';
 import Menu from './components/Menu';
+import { Button } from '@mui/material';
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -51,7 +52,8 @@ const App = () => {
 		<div>
 			<h1>Blog App</h1>
 			<p>{message}</p>
-			<p><b>{user.name}</b> logged in <button onClick={handleLogout}>log out</button></p>
+			<p><b>{user.name}</b> logged in
+				<Button variant="outlined" onClick={handleLogout} size="small">log out</Button></p>
 			<BrowserRouter>
 				<Menu/>
 			</BrowserRouter>

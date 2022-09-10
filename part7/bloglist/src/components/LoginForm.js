@@ -4,6 +4,7 @@ import { initializeBlogs } from '../reducers/BlogsReducer';
 import { setPassword, setUsername } from '../reducers/LoginFormReducer';
 import { setNotification } from '../reducers/NotificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, TextField } from '@mui/material';
 
 const LoginForm = () => {
 	const dispatch = useDispatch();
@@ -28,24 +29,16 @@ const LoginForm = () => {
 	return (
 		<form onSubmit={handleSubmit}>
 			<div>
-				username
-				<input
-					type="text"
-					value={username}
-					name="Username"
-					onChange={({ target }) => dispatch(setUsername(target.value))}
-				/>
+				<TextField label="username" variant="outlined" value={username} name="username"
+						   size="small" margin="normal"
+						   onChange={({ target }) => dispatch(setUsername(target.value))}/>
 			</div>
 			<div>
-				password
-				<input
-					type="password"
-					value={password}
-					name="Password"
-					onChange={({ target }) => dispatch(setPassword(target.value))}
-				/>
+				<TextField label="password" variant="outlined" value={password} name="password"
+						   size="small" type="password" margin="normal"
+						   onChange={({ target }) => dispatch(setPassword(target.value))}/>
 			</div>
-			<button type="submit">login</button>
+			<Button variant="outlined" type="submit">login</Button>
 		</form>
 	);
 };

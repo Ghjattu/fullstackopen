@@ -1,11 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@mui/material';
 
 const Toggleable = forwardRef((props, refs) => {
 	const [visible, setVisible] = useState(false);
 
-	const hideWhenVisible = { display: visible ? 'none' : '' };
-	const showWhenVisible = { display: visible ? '' : 'none' };
+	const hideWhenVisible = { display: visible ? 'none' : '', margin: 20 };
+	const showWhenVisible = { display: visible ? '' : 'none', margin: 20 };
 
 	const toggleVisibility = () => {
 		setVisible(!visible);
@@ -20,11 +21,11 @@ const Toggleable = forwardRef((props, refs) => {
 	return (
 		<div>
 			<div style={hideWhenVisible}>
-				<button onClick={toggleVisibility}>{props.buttonLabel}</button>
+				<Button variant="outlined" onClick={toggleVisibility}>{props.buttonLabel}</Button>
 			</div>
 			<div style={showWhenVisible}>
 				{props.children}
-				<button onClick={toggleVisibility}>cancel</button>
+				<Button variant="outlined" onClick={toggleVisibility}>cancel</Button>
 			</div>
 		</div>
 	);

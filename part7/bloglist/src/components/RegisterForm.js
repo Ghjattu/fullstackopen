@@ -5,6 +5,7 @@ import { register } from '../reducers/UsersReducer';
 import { setNotification } from '../reducers/NotificationReducer';
 import { login } from '../reducers/UserReducer';
 import { initializeBlogs } from '../reducers/BlogsReducer';
+import { Button, TextField } from '@mui/material';
 
 const RegisterForm = () => {
 	const dispatch = useDispatch();
@@ -32,18 +33,21 @@ const RegisterForm = () => {
 	return (
 		<form onSubmit={handleSubmit}>
 			<div>
-				username: <input type="text" value={username} name="username"
-								 onChange={({ target }) => dispatch(setUsername(target.value))}/>
+				<TextField label="username" variant="outlined" value={username} name="username"
+						   size="small" margin="normal"
+						   onChange={({ target }) => dispatch(setUsername(target.value))}/>
 			</div>
 			<div>
-				name: <input type="text" value={name} name="name"
-							 onChange={({ target }) => dispatch(setName(target.value))}/>
+				<TextField label="name" variant="outlined" value={name} name="name"
+						   size="small" margin="normal"
+						   onChange={({ target }) => dispatch(setName(target.value))}/>
 			</div>
 			<div>
-				password: <input type="password" value={password} name="password"
-								 onChange={({ target }) => dispatch(setPassword(target.value))}/>
+				<TextField label="password" variant="outlined" value={password} name="password"
+						   size="small" margin="normal" type="password"
+						   onChange={({ target }) => dispatch(setPassword(target.value))}/>
 			</div>
-			<button type="submit">register</button>
+			<Button variant="outlined" type="submit">register</Button>
 		</form>
 	);
 };

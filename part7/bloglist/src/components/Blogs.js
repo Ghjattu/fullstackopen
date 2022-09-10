@@ -5,6 +5,7 @@ import BlogForm from './BlogForm';
 import Toggleable from './Togglable';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const style = {
 	border: '1px solid black',
@@ -40,9 +41,9 @@ const Blogs = ({ blogs, filter }) => {
 				<p key={blog.id} style={style}>
 					<Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
 					{filter &&
-						<button type="submit"
-									   onClick={() => handleRemoveButtonClick(blog.id, blog.title, blog.author)}>remove
-						</button>}
+						<Button variant="outlined" type="submit" size="small"
+							onClick={() => handleRemoveButtonClick(blog.id, blog.title, blog.author)}>remove</Button>
+					}
 				</p>
 			)}
 		</div>

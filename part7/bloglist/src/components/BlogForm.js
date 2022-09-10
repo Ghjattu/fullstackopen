@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthor, setTitle, setUrl } from '../reducers/BlogFormReducer';
 import { createBlog } from '../reducers/BlogsReducer';
+import { Button, TextField } from '@mui/material';
 
 const BlogForm = () => {
 	const dispatch = useDispatch();
@@ -35,13 +36,22 @@ const BlogForm = () => {
 		<div>
 			<h2>create new blog</h2>
 			<form onSubmit={handleSubmit}>
-				<div>title<input type="text" value={title} name="title" placeholder="title"
-								 onChange={handleTitleChange}/></div>
-				<div>author<input type="text" value={author} name="author" placeholder="author"
-								  onChange={handleAuthorChange}/></div>
-				<div>url<input type="text" value={url} name="url" placeholder="url" onChange={handleUrlChange}/>
+				<div>
+					<TextField label="title" variant="outlined" value={title} name="title"
+							   size="small" margin="normal"
+							   onChange={handleTitleChange}/>
 				</div>
-				<button type="submit">create</button>
+				<div>
+					<TextField label="author" variant="outlined" value={author} name="author"
+							   size="small" margin="normal"
+							   onChange={handleAuthorChange}/>
+				</div>
+				<div>
+					<TextField label="url" variant="outlined" value={url} name="url"
+							   size="small" margin="normal"
+							   onChange={handleUrlChange}/>
+				</div>
+				<Button variant="outlined" type="submit">create</Button>
 			</form>
 		</div>
 	);
