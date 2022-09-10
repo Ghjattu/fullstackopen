@@ -3,7 +3,7 @@ import usersService from '../services/users';
 
 /**
  * @description Save all registered users.
- * @type {Slice<{users: *[]}, {setUsers(*, *): void, addUsers(*, *): void}, string>}
+ * @type {Slice<{users: *[]}, {updateUsersInfo(*, *): void, setUsers(*, *): void, addUsers(*, *): void}, string>}
  */
 const usersReducer = createSlice({
 	name: 'Users',
@@ -16,6 +16,14 @@ const usersReducer = createSlice({
 		},
 		addUsers(state, action) {
 			state.users.push(action.payload);
+		},
+		updateUsersInfo(state, action) {
+			const savedBlog = action.payload;
+			state.users.forEach(user => {
+				if (user.id === savedBlog.user) {
+					user.blogs.push(savedBlog);
+				}
+			});
 		}
 	}
 });
@@ -34,5 +42,5 @@ export const register = (newUser) => {
 	};
 };
 
-export const { setUsers, addUsers } = usersReducer.actions;
+export const { setUsers, addUsers, updateUsersInfo } = usersReducer.actions;
 export default usersReducer.reducer;

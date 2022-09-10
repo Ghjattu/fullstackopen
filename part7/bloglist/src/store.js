@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import blogFormReducer from './reducers/BlogFormReducer';
 import loginFormReducer from './reducers/LoginFormReducer';
 import notificationReducer from './reducers/NotificationReducer';
-import blogReducer from './reducers/BlogReducer';
+import blogsReducer from './reducers/BlogsReducer';
 import userReducer from './reducers/UserReducer';
 import registerFormReducer from './reducers/RegisterFormReducer';
 import usersReducer from './reducers/UsersReducer';
@@ -13,7 +13,7 @@ export default configureStore({
 		LoginForm: loginFormReducer,
 		RegisterForm: registerFormReducer,
 		Notification: notificationReducer,
-		Blogs: blogReducer,
+		Blogs: blogsReducer,
 		User: userReducer,
 		Users: usersReducer
 	}

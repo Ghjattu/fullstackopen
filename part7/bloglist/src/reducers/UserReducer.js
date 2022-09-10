@@ -9,7 +9,7 @@ import blogService from '../services/blogs';
 const userReducer = createSlice({
 	name: 'User',
 	initialState: {
-		user: null
+		user: null,
 	},
 	reducers: {
 		setUser(state, action) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { login } from '../reducers/UserReducer';
-import { initializeBlogs } from '../reducers/BlogReducer';
+import { initializeBlogs } from '../reducers/BlogsReducer';
 import { setPassword, setUsername } from '../reducers/LoginFormReducer';
 import { setNotification } from '../reducers/NotificationReducer';
 import { useDispatch, useSelector } from 'react-redux';

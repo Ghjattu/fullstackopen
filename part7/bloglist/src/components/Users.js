@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Users = () => {
-	const users = useSelector(state => state.Users.users);
-
+const Users = ({ users }) => {
 	return (
 		<div>
 			<h2>Users</h2>
@@ -17,7 +16,7 @@ const Users = () => {
 				<tbody>
 					{users.map(user =>
 						<tr key={user.id}>
-							<td>{user.username}</td>
+							<td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
 							<td>{user.blogs.length}</td>
 						</tr>
 					)}
@@ -25,6 +24,10 @@ const Users = () => {
 			</table>
 		</div>
 	);
+};
+
+Users.propTypes = {
+	users: PropTypes.array
 };
 
 export default Users;

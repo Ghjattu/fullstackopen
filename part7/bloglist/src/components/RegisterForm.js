@@ -4,7 +4,7 @@ import { setUsername, setName, setPassword } from '../reducers/RegisterFormReduc
 import { register } from '../reducers/UsersReducer';
 import { setNotification } from '../reducers/NotificationReducer';
 import { login } from '../reducers/UserReducer';
-import { initializeBlogs } from '../reducers/BlogReducer';
+import { initializeBlogs } from '../reducers/BlogsReducer';
 
 const RegisterForm = () => {
 	const dispatch = useDispatch();

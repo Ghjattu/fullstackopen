@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthor, setTitle, setUrl } from '../reducers/BlogFormReducer';
-import { createBlog } from '../reducers/BlogReducer';
+import { createBlog } from '../reducers/BlogsReducer';
 
 const BlogForm = () => {
 	const dispatch = useDispatch();

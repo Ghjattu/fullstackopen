@@ -1,21 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
 import { setNotification } from './NotificationReducer';
+import { updateUsersInfo } from './UsersReducer';
 
-const blogReducer = createSlice({
+const blogsReducer = createSlice({
 	name: 'Blogs',
 	initialState: {
 		blogs: [],
-		visible: []
 	},
 	reducers: {
 		setBlogs(state, action) {
 			state.blogs = action.payload;
-			state.visible = new Array(action.payload.length).fill(false);
 		},
 		addBlog(state, action) {
 			state.blogs.push(action.payload);
-			state.visible.push(false);
 		},
 		updateBlog(state, action) {
 			const updatedBlog = action.payload;
@@ -30,14 +28,9 @@ const blogReducer = createSlice({
 			state.blogs.forEach((blog, index, arr) => {
 				if (blog.id === id) {
 					arr.splice(index, 1);
-					state.visible.splice(index, 1);
 				}
 			});
 		},
-		updateVisible(state, action) {
-			const idx = action.payload;
-			state.visible[`${idx}`] = !state.visible[`${idx}`];
-		}
 	}
 });
 
@@ -53,6 +46,7 @@ export const createBlog = (newBlog) => {
 	return async (dispatch) => {
 		const savedBlog = await blogService.create(newBlog);
 		dispatch(addBlog(savedBlog));
+		dispatch(updateUsersInfo(savedBlog));
 		dispatch(setNotification(`a new blog ${savedBlog.title} by ${savedBlog.author} added`));
 	};
 };
@@ -73,5 +67,5 @@ export const deleteBlogById = (id) => {
 	};
 };
 
-export const { setBlogs, addBlog, updateBlog, deleteBlog, updateVisible } = blogReducer.actions;
-export default blogReducer.reducer;
+export const { setBlogs, addBlog, updateBlog, deleteBlog } = blogsReducer.actions;
+export default blogsReducer.reducer;

@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react';
-import Blog from './components/Blog';
 import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
 import Toggleable from './components/Togglable';
-import BlogForm from './components/BlogForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, setUser } from './reducers/UserReducer';
 import RegisterForm from './components/RegisterForm';
 import { initializeUsers } from './reducers/UsersReducer';
-import Users from './components/Users';
+import { BrowserRouter } from 'react-router-dom';
+import Menu from './components/Menu';
 
 const App = () => {
 	const dispatch = useDispatch();
 
-	const blogs = useSelector(state => state.Blogs.blogs);
 	const user = useSelector(state => state.User.user);
 	const message = useSelector(state => state.Notification.message);
 
@@ -37,7 +35,7 @@ const App = () => {
 	if (user === null) {
 		return (
 			<div>
-				<h2>Log in the app</h2>
+				<h1>Log in the app</h1>
 				<p>{message}</p>
 				<Toggleable buttonLabel="login">
 					<LoginForm/>
@@ -51,14 +49,12 @@ const App = () => {
 
 	return (
 		<div>
-			<h2>Blogs</h2>
+			<h1>Blog App</h1>
 			<p>{message}</p>
-			<p>{user.name} logged in <button onClick={handleLogout}>log out</button></p>
-			<Toggleable buttonLabel='new blog'>
-				<BlogForm/>
-			</Toggleable>
-			<Blog blogs={blogs}/>
-			<Users/>
+			<p><b>{user.name}</b> logged in <button onClick={handleLogout}>log out</button></p>
+			<BrowserRouter>
+				<Menu/>
+			</BrowserRouter>
 		</div>
 	);
 };
