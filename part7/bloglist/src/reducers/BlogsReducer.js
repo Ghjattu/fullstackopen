@@ -59,6 +59,14 @@ export const updateBlogLikes = (id, newBlog) => {
 	};
 };
 
+export const updateBlogComments = (id, newBlog) => {
+	return async (dispatch) => {
+		const updatedBlog = await blogService.update(id, newBlog);
+		dispatch(updateBlog(updatedBlog));
+		dispatch(setNotification(`the blog ${updatedBlog.title}'s comments updated`));
+	};
+};
+
 export const deleteBlogById = (id) => {
 	return async (dispatch) => {
 		await blogService.deleteById(id);
