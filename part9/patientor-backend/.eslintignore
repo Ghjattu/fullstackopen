@@ -3,7 +3,7 @@
 
 # IntelliJ project files
 
-build
+build/
 node_modules
 tsconfig.json
 .eslintrc
