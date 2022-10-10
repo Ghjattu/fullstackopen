@@ -54,16 +54,19 @@ const calculateExercises = (exerciseHours: Array<number>, target: number): Resul
         average: avg,
         rating: rating,
         ratingDescription: description
-    }
+    };
 };
 
 try {
     const {exerciseHours, target} = parseArguments2(process.argv);
     console.log(calculateExercises(exerciseHours, target));
 } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
         errorMessage += ' Error: ' + error.message;
     }
     console.log(errorMessage);
 }
+
+
+export { calculateExercises };

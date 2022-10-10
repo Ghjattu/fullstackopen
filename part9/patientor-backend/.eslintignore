@@ -1,0 +1,12 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+
+build/
+node_modules
+tsconfig.json
+.eslintrc
+package.json
+package-lock.json
+README.md
