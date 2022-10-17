@@ -10,6 +10,17 @@ router.get('/', (_req, res) => {
     res.status(200).json(result);
 });
 
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    const result = patientService.getPatientById(id);
+
+    if (result === undefined) {
+        res.status(404).json({ error: 'Not Found'});
+        return;
+    }
+    res.status(200).json(result);
+});
+
 router.post('/', (req, res) => {
     try {
         const newPatient = toNewPatient(req.body);
